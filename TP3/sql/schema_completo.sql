@@ -8,7 +8,7 @@
 -- Este script está pensado para aplicarse UNA SOLA VEZ, sobre una
 -- base recién creada y VACÍA. Una vez ejecutada la carga masiva
 -- (~670.000 filas), reejecutar este script destruye todos los datos
--- generados. Si hicera falta volver a aplicarlo, se crea una base
+-- generados. Si hiciera falta volver a aplicarlo, se crea una base
 -- nueva; no se reejecuta sobre una base ya poblada.
 -- ============================================================
 
@@ -70,8 +70,8 @@ CREATE TABLE producto (
     -- Unidades disponibles. DEFAULT 0: un producto recién creado empieza con
     -- stock cero. CHECK(stock >= 0): impide valores negativos
     stock    INTEGER            NOT NULL DEFAULT 0 CHECK (stock >= 0),
-    -- Baja lógica: equivale al `activo` del esquema propio, pero aquí se
-    -- llama `eliminado` (convención de cátedra). Nunca DELETE físico
+    -- Baja lógica: FALSE = vigente, TRUE = discontinuado. Nunca DELETE
+    -- físico, para no perder el historial de ventas del producto
     eliminado BOOLEAN           NOT NULL DEFAULT FALSE,
     -- FK a categoria. ON DELETE RESTRICT: impide eliminar físicamente una
     -- categoría si tiene productos asociados (vigentes o no); para dejar
@@ -118,6 +118,6 @@ CREATE TABLE detalle_pedido (
     precio_unitario NUMERIC(10,2) NOT NULL CHECK (precio_unitario >= 0),
     -- Constraint único compuesto: un producto aparece como máximo una vez
     -- por pedido. Genera el índice implícito (pedido_id, producto_id) que
-    -- precisamente cubre las búsquedas por pedido_id (ver sección 5.3)
+    -- precisamente cubre las búsquedas por pedido_id (ver sección 7 de la spec)
     UNIQUE (pedido_id, producto_id)
 );
