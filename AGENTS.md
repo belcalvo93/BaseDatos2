@@ -102,3 +102,7 @@ db/backups/                   — respaldos .dump (gitignored)
 - La conexión de DBeaver debe cerrarse antes de `createdb -T` (bloqueo de plantilla)
 - Los respaldos (`db/backups/`) están gitignored — no commitearlos
 - Los archivos `*.dump` y `*.backup` tampoco se commitean
+
+## Seguridad
+
+Respetar siempre las normas definidas en `.kiro/steering/security-policies.md`.
