@@ -1,3 +1,5 @@
-respaldos/
-*.dump
-*.backup
+.env
+db/backups/*.dump
+db/backups/*.sql
+*.log
+node_modules/
