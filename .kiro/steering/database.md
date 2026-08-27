@@ -1,4 +1,7 @@
-# Base de datos — contexto del proyecto
+---
+inclusion: manual
+---
+# Base de datos — esquema propio TP1/TP2 (NO usar para TP3)
 
 ## Motor y entorno
 
