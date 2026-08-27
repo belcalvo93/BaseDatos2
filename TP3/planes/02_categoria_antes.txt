@@ -1,0 +1,9 @@
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Seq Scan on producto  (cost=0.00..1093.00 rows=4192 width=40) (actual time=0.029..7.706 rows=4167 loops=1)
+   Filter: ((NOT eliminado) AND (categoria_id = 3))
+   Rows Removed by Filter: 45833
+ Planning Time: 0.623 ms
+ Execution Time: 7.928 ms
+(5 rows)
+

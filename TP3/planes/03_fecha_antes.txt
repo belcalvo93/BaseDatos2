@@ -1,0 +1,9 @@
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on pedido  (cost=0.00..4274.00 rows=66457 width=24) (actual time=0.083..19.011 rows=66430 loops=1)
+   Filter: ((fecha >= '2025-01-01 00:00:00-03'::timestamp with time zone) AND (fecha < '2026-01-01 00:00:00-03'::timestamp with time zone))
+   Rows Removed by Filter: 133570
+ Planning Time: 0.690 ms
+ Execution Time: 21.512 ms
+(5 rows)
+

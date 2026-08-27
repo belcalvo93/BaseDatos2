@@ -1,0 +1,11 @@
+                                                                      QUERY PLAN                                                                      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on pedido  (cost=1417.81..3688.96 rows=66477 width=24) (actual time=5.852..13.290 rows=66430 loops=1)
+   Recheck Cond: ((fecha >= '2025-01-01 00:00:00-03'::timestamp with time zone) AND (fecha < '2026-01-01 00:00:00-03'::timestamp with time zone))
+   Heap Blocks: exact=596
+   ->  Bitmap Index Scan on idx_pedido_fecha  (cost=0.00..1401.19 rows=66477 width=0) (actual time=5.762..5.763 rows=66430 loops=1)
+         Index Cond: ((fecha >= '2025-01-01 00:00:00-03'::timestamp with time zone) AND (fecha < '2026-01-01 00:00:00-03'::timestamp with time zone))
+ Planning Time: 1.204 ms
+ Execution Time: 15.716 ms
+(7 rows)
+

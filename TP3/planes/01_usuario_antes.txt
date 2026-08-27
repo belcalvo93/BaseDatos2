@@ -1,0 +1,9 @@
+                                              QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Seq Scan on pedido  (cost=0.00..3774.00 rows=28 width=24) (actual time=0.294..17.413 rows=10 loops=1)
+   Filter: (usuario_id = 1500)
+   Rows Removed by Filter: 199990
+ Planning Time: 0.740 ms
+ Execution Time: 17.479 ms
+(5 rows)
+

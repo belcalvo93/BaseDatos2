@@ -1,0 +1,12 @@
+                                                              QUERY PLAN                                                              
+--------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on producto  (cost=48.78..569.18 rows=4192 width=40) (actual time=0.410..3.107 rows=4167 loops=1)
+   Recheck Cond: (categoria_id = 3)
+   Filter: (NOT eliminado)
+   Heap Blocks: exact=468
+   ->  Bitmap Index Scan on idx_producto_categoria  (cost=0.00..47.73 rows=4192 width=0) (actual time=0.325..0.325 rows=4167 loops=1)
+         Index Cond: (categoria_id = 3)
+ Planning Time: 0.833 ms
+ Execution Time: 3.440 ms
+(8 rows)
+

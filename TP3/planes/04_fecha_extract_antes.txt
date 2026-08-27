@@ -1,0 +1,12 @@
+                                                        QUERY PLAN                                                        
+--------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..4138.71 rows=1000 width=24) (actual time=0.690..62.285 rows=66430 loops=1)
+   Workers Planned: 1
+   Workers Launched: 1
+   ->  Parallel Seq Scan on pedido  (cost=0.00..3038.71 rows=588 width=24) (actual time=0.193..29.084 rows=33215 loops=2)
+         Filter: (EXTRACT(year FROM fecha) = '2025'::numeric)
+         Rows Removed by Filter: 66785
+ Planning Time: 0.731 ms
+ Execution Time: 64.870 ms
+(8 rows)
+

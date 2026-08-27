@@ -1,0 +1,11 @@
+                                                         QUERY PLAN                                                          
+-----------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on pedido  (cost=4.51..104.41 rows=28 width=24) (actual time=0.096..0.187 rows=10 loops=1)
+   Recheck Cond: (usuario_id = 1500)
+   Heap Blocks: exact=10
+   ->  Bitmap Index Scan on idx_pedido_usuario  (cost=0.00..4.50 rows=28 width=0) (actual time=0.080..0.080 rows=10 loops=1)
+         Index Cond: (usuario_id = 1500)
+ Planning Time: 0.944 ms
+ Execution Time: 0.366 ms
+(7 rows)
+
