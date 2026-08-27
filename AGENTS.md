@@ -1,67 +1,104 @@
 # AGENTS.md — Base de Datos 2
 
-## Project
+## Proyecto
 
-PostgreSQL course project (TP integrador). Schema + seed data for a bakery/e-commerce domain. Academic context — every SQL statement must be defensible orally.
+TP integrador Food Store — materia Base de Datos 2, Tecnicatura Universitaria en Programación (UTN). Contexto académico: todo SQL debe ser defendible oralmente.
 
 ## Stack
 
-- PostgreSQL 17.11 on Windows 11
+- PostgreSQL 17.11 sobre Windows 11
 - Terminal: Git Bash (`psql`, `createdb`, `pg_dump`)
-- No app framework — raw SQL scripts only
+- Editor: Visual Studio Code
+- Sin framework de aplicación — scripts SQL puros
 
-## Databases
+## Bases de datos
 
-| Base | Role |
+Las bases del TP2:
+
+| Base | Rol |
 |------|------|
-| `bd2_proyecto` | Template. **Never modify.** |
-| `bd2_trabajo` | Working copy. All scripts run here. |
+| `bd2_proyecto` | Plantilla. **Nunca modificar.** |
+| `bd2_trabajo` | Copia de trabajo. Sobre ella se ejecutan todos los scripts del TP2. |
 
-Recreate the working copy when needed:
+Recrear la copia cuando haga falta:
+
 ```bash
 dropdb -U postgres bd2_trabajo
 createdb -U postgres -T bd2_proyecto bd2_trabajo
 ```
 
-## Mandatory safety protocol
+El TP3 va a necesitar sus propias bases, basadas en el esquema de cátedra (ver sección 6).
 
-**Every script** that writes to the DB must follow this order:
+## Protocolo de seguridad
 
-1. **Backup** before structural changes: `pg_dump -U postgres -F c -f "respaldos/bd2_trabajo_YYYYMMDD.dump" bd2_trabajo`
-2. **Transaction with ROLLBACK** first — inspect output, then repeat with COMMIT
-3. **Check `SELECT current_database();`** before any execution
-4. **Read every line** of generated scripts before running — if you can't explain it, don't run it
-5. **Verify in the motor** — don't trust agent reports about what was done
+**Todo script** que escriba en la base debe seguir este orden:
 
-Full protocol: `protocolo_seguridad.md`
+1. **Respaldo** antes de cambios estructurales: `pg_dump -U postgres -F c -f "db/backups/bd2_trabajo_YYYYMMDD.dump" bd2_trabajo`
+2. **Transacción con ROLLBACK** primero — inspeccionar la salida, y recién después repetir con COMMIT
+3. **Verificar `SELECT current_database();`** antes de cualquier ejecución
+4. **Leer cada línea** del script generado — si no se puede explicar, no se ejecuta
+5. **Verificar en el motor** — no confiar en el reporte del agente sobre lo que hizo
 
-## SQL conventions
+Protocolo completo: `TP2/protocolo_seguridad.md`
 
-- Tables/columns: `snake_case` singular (`detalle_pedido`, not `detallePedidos`)
-- PKs: `id_<tabla>` (BIGINT GENERATED ALWAYS AS IDENTITY)
+## Convenciones SQL (esquema propio)
+
+Convenciones del esquema usado en TP1 y TP2:
+
+- Tablas y columnas: `snake_case` singular (`detalle_pedido`, no `detallePedidos`)
+- PKs: `id_<tabla>` (`BIGINT GENERATED ALWAYS AS IDENTITY`)
 - FKs: `id_<tabla_referenciada>`
-- Indexes: `idx_<tabla>_<columna(s)>`
-- ENUM values: uppercase (`'EFECTIVO'`, not `'efectivo'`)
-- Logical delete: `activo BOOLEAN NOT NULL DEFAULT TRUE` — never physical DELETE on `categoria`/`producto`
-- `ON DELETE RESTRICT` on most FKs; `CASCADE` only on `detalle_pedido.id_pedido`
-- `precio_unitario` in `detalle_pedido` is a frozen historical price (R4), independent of `producto.precio`
-- Scripts are idempotent: `DROP … IF EXISTS … CASCADE` before `CREATE`
+- Índices: `idx_<tabla>_<columna(s)>`
+- ENUMs: tipo en minúsculas (`forma_pago_enum`), valores en mayúsculas (`'EFECTIVO'`)
+- Baja lógica: `activo BOOLEAN NOT NULL DEFAULT TRUE` — nunca DELETE físico en `categoria` ni `producto`
+- `ON DELETE RESTRICT` en la mayoría de las FKs; `CASCADE` solo en `detalle_pedido.id_pedido`
+- `precio_unitario` en `detalle_pedido` es un precio histórico congelado (R4), independiente de `producto.precio`
+- Scripts idempotentes: `DROP … IF EXISTS … CASCADE` antes de `CREATE`
 
-## File layout
+## Esquema de cátedra (TP3)
+
+El TP3 usa el esquema de Food Store de la cátedra, que tiene nombres distintos a los del proyecto propio:
+
+| Nuestro esquema (TP1/TP2) | Esquema de cátedra (TP3) |
+|---|---|
+| `activo` | `eliminado` |
+| `id_cliente` | `usuario_id` |
+| `id_categoria` | `categoria_id` |
+
+Regla dura: **no mezclar convenciones entre TPs**. Cada TP respeta las naming conventions de su propio esquema. Los scripts del TP3 se escriben contra las tablas de cátedra, no contra las del TP1/TP2.
+
+## Estructura de archivos
 
 ```
-sql/schema.sql     — table definitions (idempotent)
-sql/datos.sql      — seed data (uses subqueries for FKs, no hardcoded IDs)
-sql/restricciones.sql — triggers for integrity rules (Regla 1, Regla 2)
-spec_restricciones.md — integrity constraint specs (read before writing triggers)
-protocolo_seguridad.md — safety protocol (MANDATORY reading)
-.kiro/steering/database.md — full schema reference with design rationale
+TP1/
+├── Calvo_Belen_TP1.pdf      — informe del TP1
+├── Diagrama ER.png           — diagrama entidad-relación
+└── schema.sql                — DDL original
+
+TP2/
+├── protocolo_seguridad.md    — protocolo de seguridad (extenso)
+├── spec_restricciones.md     — spec de las reglas de integridad
+├── sql/
+│   ├── schema.sql            — DDL del esquema (idéntico a TP1)
+│   ├── datos.sql             — carga inicial
+│   ├── restricciones.sql     — funciones y triggers de integridad
+│   └── pruebas_restricciones.sql — casos de prueba (BEGIN/ROLLBACK)
+├── informe_concurrencia.md   — informe de concurrencia
+├── ejercicio_lectura_critica.md — análisis de scripts peligrosos
+└── duia/                     — declaraciones de uso de IA por parte
+
+TP3/                          — optimización de consultas (previsto, hoy vacío)
+                              — carga masiva con generate_series
+                              — EXPLAIN ANALYZE e índices
+
+db/backups/                   — respaldos .dump (gitignored)
+.kiro/steering/               — steering docs del proyecto (database.md, security-policies.md)
 ```
 
-## Gotchas
+## Cuidados
 
-- `EXPLAIN ANALYZE` on INSERT/UPDATE/DELETE **executes the statement**, not just plans it — always wrap in a transaction
-- `UPDATE`/`DELETE` without `WHERE` affects all rows — verify WHERE clauses before running
-- DBeaver connection must be closed before `createdb -T` (template locking)
-- `respuesta/` and `*.dump`/`*.backup` are gitignored — don't commit them
-- `concurrencia/` and `duia/` directories are empty placeholders for future work
+- `EXPLAIN ANALYZE` sobre INSERT, UPDATE o DELETE **ejecuta la sentencia**, no solo la planifica — siempre envolver en una transacción
+- `UPDATE` o `DELETE` sin `WHERE` afecta todas las filas — verificar el WHERE antes de ejecutar
+- La conexión de DBeaver debe cerrarse antes de `createdb -T` (bloqueo de plantilla)
+- Los respaldos (`db/backups/`) están gitignored — no commitearlos
+- Los archivos `*.dump` y `*.backup` tampoco se commitean
